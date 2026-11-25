@@ -1,0 +1,66 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Streak logic tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile and run host tests
+        run: |
+          c++ -std=c++20 -O2 -Wall -Wextra -Werror tests/streak_logic_test.cpp -o streak_tests
+          ./streak_tests
+
+  build:
+    name: GD ${{ matrix.gd }} / ${{ matrix.target }}
+    needs: tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, target: Win64, gd: "2.2081", geode: "5.11.2" }
+          - { os: windows-latest, target: Win64, gd: "2.2091", geode: "6.0.0" }
+          - { os: ubuntu-latest, target: Android64, gd: "2.2081", geode: "5.11.2" }
+          - { os: ubuntu-latest, target: Android32, gd: "2.2081", geode: "5.11.2" }
+          - { os: ubuntu-latest, target: Android64, gd: "2.2091", geode: "6.0.0" }
+          - { os: ubuntu-latest, target: Android32, gd: "2.2091", geode: "6.0.0" }
+    steps:
+      - uses: actions/checkout@v4
+
+      # A single mod.json cannot target two Geometry Dash versions, so each job
+      # rewrites it to the version it is about to build.
+      - name: Target Geometry Dash ${{ matrix.gd }}
+        shell: bash
+        env:
+          GD_VERSION: ${{ matrix.gd }}
+          GEODE_VERSION: ${{ matrix.geode }}
+        run: |
+          PYTHON="$(command -v python3 || command -v python)"
+          "$PYTHON" - <<'PY'
+          import json, os
+          with open("mod.json", encoding="utf-8") as f:
+              mod = json.load(f)
+          mod["geode"] = os.environ["GEODE_VERSION"]
+          mod["gd"] = {"win": os.environ["GD_VERSION"], "android": os.environ["GD_VERSION"]}
+          with open("mod.json", "w", encoding="utf-8") as f:
+              json.dump(mod, f, indent="\t")
+              f.write("\n")
+          PY
+
+      - name: Build
+        uses: geode-sdk/build-geode-mod@main
+        with:
+          sdk: given
+          target: ${{ matrix.target }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gd-streaks-${{ matrix.gd }}-${{ matrix.target }}
+          path: build
+          if-no-files-found: error

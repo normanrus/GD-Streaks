@@ -1,0 +1,50 @@
+{
+	"geode": "5.11.2",
+	"gd": {
+		"win": "2.2081",
+		"android": "2.2081"
+	},
+	"version": "v1.0.0",
+	"id": "openhands.gd-streaks",
+	"name": "GD Streaks",
+	"developer": "OpenHands",
+	"description": "Daily login streaks with a 7-day activity calendar.",
+	"tags": [
+		"offline",
+		"interface",
+		"utility"
+	],
+	"resources": {
+		"files": [
+			"resources/*.png"
+		]
+	},
+	"settings": {
+		"general-title": {
+			"type": "title",
+			"name": "Main menu"
+		},
+		"show-counter": {
+			"type": "bool",
+			"name": "Show streak counter",
+			"description": "Show the number of days next to the flame icon in the main menu.",
+			"default": true
+		},
+		"hide-button": {
+			"type": "bool",
+			"name": "Hide streak button",
+			"description": "Hide the flame button in the main menu entirely. Your streak still counts.",
+			"default": false
+		},
+		"notifications-title": {
+			"type": "title",
+			"name": "Notifications"
+		},
+		"notifications": {
+			"type": "bool",
+			"name": "Streak notifications",
+			"description": "Show a notification when your streak grows or resets, including special messages at 7, 14, 30, 50 and 100 days.",
+			"default": true
+		}
+	}
+}
