@@ -1,8 +1,14 @@
 # GD Streaks
 
+[![Build](https://github.com/normanrus/GD-Streaks/actions/workflows/build.yml/badge.svg)](https://github.com/normanrus/GD-Streaks/actions/workflows/build.yml)
+
 A [Geode](https://geode-sdk.org) mod for Geometry Dash that adds a daily login streak, with a flame counter in the main menu, a streak window and a 7 day activity calendar.
 
 The flame pill sits in the top right corner of the main menu and shows your current streak. Clicking it opens the streak window: current and best streak, the start and last activity dates, a 7 day calendar and progress to the next milestone.
+
+## Download
+
+Grab the `.geode` file for your game version from [Releases](https://github.com/normanrus/GD-Streaks/releases/latest) and open it with Geode.
 
 ## Features
 
